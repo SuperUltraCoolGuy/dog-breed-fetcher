@@ -24,7 +24,6 @@ public class Main {
      * returned by the fetcher
      */
     public static int getNumberOfSubBreeds(String breed, BreedFetcher breedFetcher) throws BreedFetcher.BreedNotFoundException {
-        // TODO Task 3 implement this code so that it is entirely consistent with its provided documentation.
         try {
             List<String> subBreeds = breedFetcher.getSubBreeds(breed);
             return subBreeds.size();
