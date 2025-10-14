@@ -16,20 +16,39 @@ import java.util.*;
  */
 public class DogApiBreedFetcher implements BreedFetcher {
     private final OkHttpClient client = new OkHttpClient();
+    private static final String API_URL = "https://dog.ceo/api";
 
     /**
      * Fetch the list of sub breeds for the given breed from the dog.ceo API.
+     *
      * @param breed the breed to fetch sub breeds for
      * @return list of sub breeds for the given breed
      * @throws BreedNotFoundException if the breed does not exist (or if the API call fails for any reason)
      */
     @Override
-    public List<String> getSubBreeds(String breed) {
-        // TODO Task 1: Complete this method based on its provided documentation
-        //      and the documentation for the dog.ceo API. You may find it helpful
-        //      to refer to the examples of using OkHttpClient from the last lab,
-        //      as well as the code for parsing JSON responses.
-        // return statement included so that the starter code can compile and run.
-        return new ArrayList<>();
+    public List<String> getSubBreeds(String breed) throws BreedNotFoundException {
+        String url = String.format("%s/breed/%s/list", API_URL, breed.toLowerCase());
+
+        final Request request = new Request.Builder()
+                .url(url)
+                .build();
+        try {
+            final Response response = client.newCall(request).execute();
+            final JSONObject responseBody = new JSONObject(response.body().string());
+            String status = responseBody.getString("status");
+            if (!"success".equals(status)) {
+                throw new BreedNotFoundException("Breed not found: " + breed);
+            }
+            List<String> arrayList = new ArrayList<>();
+            JSONArray array = responseBody.getJSONArray("message");
+            for (int i = 0; i < array.length(); i++) {
+                String s = array.getString(i);
+                arrayList.add(s);
+            }
+            return arrayList;
+
+        } catch (IOException | BreedNotFoundException e) {
+            throw new BreedNotFoundException("Failed!");
+        }
     }
 }

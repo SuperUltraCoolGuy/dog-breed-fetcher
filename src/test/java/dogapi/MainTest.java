@@ -7,14 +7,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class MainTest {
 
     @Test
-    void getNumberOfSubBreedsValidBreed() {
+    void getNumberOfSubBreedsValidBreed() throws BreedFetcher.BreedNotFoundException {
         BreedFetcherForLocalTesting mock = new BreedFetcherForLocalTesting();
 
         assertEquals(2, Main.getNumberOfSubBreeds("hound", mock));
     }
 
     @Test
-    void getNumberOfSubBreedsInvalidBreed() {
+    void getNumberOfSubBreedsInvalidBreed() throws BreedFetcher.BreedNotFoundException {
         BreedFetcherForLocalTesting mock = new BreedFetcherForLocalTesting();
 
         assertEquals(-1, Main.getNumberOfSubBreeds("cat", mock));
@@ -22,7 +22,7 @@ class MainTest {
 
     @Test
     void exceptionTypeTest() {
-        BreedFetcher.BreedNotFoundException bfe = new BreedFetcher.BreedNotFoundException("hound");
+        Exception bfe = new BreedFetcher.BreedNotFoundException("hound");
         assertTrue(bfe instanceof Exception && !(bfe instanceof RuntimeException),
                 "BreedFetcher.BreedNotFoundException must be a checked exception.");
     }
